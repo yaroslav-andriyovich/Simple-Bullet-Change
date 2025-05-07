@@ -20,6 +20,7 @@ namespace Code.Weapons.Base
         public void ChangeBulletType<T>(T bulletPrefab) where T : Bullet
         {
             _bulletsType = bulletPrefab;
+            Reload();
         }
 
         public void Reload()

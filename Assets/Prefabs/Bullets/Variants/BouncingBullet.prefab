@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 178839746065465176, guid: 150b66a9fede2c24aba33a120514b098,
         type: 3}
       propertyPath: m_Name
-      value: BouncingBullet Variant 1
+      value: BouncingBullet
       objectReference: {fileID: 0}
     - target: {fileID: 8005218252873033092, guid: 150b66a9fede2c24aba33a120514b098,
         type: 3}
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b507456326e3498bb25a07ccd4c41761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
+  speed: 10
   lifetime: 5
   detonationParticlePrefab: {fileID: 2140758800889950845, guid: e5923bc5eec78f848b41766a1d425f8b,
     type: 3}

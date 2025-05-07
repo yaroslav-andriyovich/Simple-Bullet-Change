@@ -12,6 +12,9 @@ namespace Code.Weapons.Base
         [SerializeField] private AudioClip _reloadingClip;
         [SerializeField] private AudioSource _audio;
 
+        [Header("VFX")]
+        [SerializeField] private ParticleSystem _muzzleFlash;
+
         private static readonly int triggerFire = Animator.StringToHash("Fire");
         private static readonly int triggerReloading = Animator.StringToHash("Reloading");
 
@@ -29,6 +32,7 @@ namespace Code.Weapons.Base
 
         private void PlayFire()
         {
+            _muzzleFlash.Play();
             _animator.SetTrigger(triggerFire);
             PlayAudio(_fireClip);
         }

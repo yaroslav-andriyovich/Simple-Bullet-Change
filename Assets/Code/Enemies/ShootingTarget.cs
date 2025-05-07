@@ -14,6 +14,8 @@ namespace Code.Enemies
         
         [Header("Animation")]
         [SerializeField, Min(0f)] private float _animationTime = 0.25f;
+        [SerializeField] private float _animationAngle = -10f;
+        [SerializeField] private Ease _animationEase = Ease.Linear;
         
         [Header("Sound")]
         [SerializeField, Range(0f, 2f)] private float _pitchMin = 0.5f;
@@ -26,6 +28,7 @@ namespace Code.Enemies
 
         private Material _material;
         private AudioSource _audio;
+        private Sequence _sequence;
 
         private void Awake()
         {
@@ -37,6 +40,7 @@ namespace Code.Enemies
         {
             base.TakeDamage();
             AnimateHit();
+            PlayTiltAnimation();
             PlaySound();
         }
 
@@ -54,6 +58,29 @@ namespace Code.Enemies
         {
             _audio.pitch = Random.Range(_pitchMin, _pitchMax);
             _audio.Play();
+        }
+        
+        private void PlayTiltAnimation()
+        {
+            if (_sequence != null)
+                _sequence.Rewind();
+            
+            float partTime = _animationTime / 2;
+            Quaternion initialRotation = transform.rotation;
+            
+            _sequence = DOTween.Sequence();
+
+            _sequence.Append(transform.DORotateQuaternion(
+                    initialRotation * Quaternion.Euler(_animationAngle, 0f, 0f),
+                    partTime)
+                .SetEase(_animationEase));
+
+            _sequence.Append(transform.DORotateQuaternion(
+                    initialRotation,
+                    partTime)
+                .SetEase(_animationEase));
+
+            _sequence.Play();
         }
     }
     
