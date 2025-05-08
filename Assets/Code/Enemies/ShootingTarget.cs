@@ -39,20 +39,17 @@ namespace Code.Enemies
         public override void TakeDamage()
         {
             base.TakeDamage();
-            AnimateHit();
+            PlayHitAnimation();
             PlayTiltAnimation();
             PlaySound();
         }
 
-        private void AnimateHit()
+        private void PlayHitAnimation()
         {
             _material.DORewind();
             _material.DOColor(_hitColor, _animationTime)
                 .OnComplete(AnimateToNormalColor);
         }
-
-        private void AnimateToNormalColor() => 
-            _material.DOColor(_defaultColor, _animationTime);
 
         private void PlayTiltAnimation()
         {
@@ -76,6 +73,9 @@ namespace Code.Enemies
 
             _sequence.Play();
         }
+
+        private void AnimateToNormalColor() => 
+            _material.DOColor(_defaultColor, _animationTime);
 
         private void PlaySound()
         {

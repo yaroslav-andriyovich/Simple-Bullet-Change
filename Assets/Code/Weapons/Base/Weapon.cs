@@ -16,37 +16,36 @@ namespace Code.Weapons.Base
 
         private bool isReloading => Time.time - _lastReloadingTimeCode < ReloadingDuration;
 
-        private Bullet _bulletsType;
-        private uint _ammoClip;
+        private Bullet _bulletType;
+        private uint _currentAmmoClip;
         private float _lastShotTime;
         private float _lastReloadingTimeCode;
 
-        public void ChangeBulletType<T>(T bulletPrefab) where T : Bullet
+        public void ChangeBulletType(Bullet bulletPrefab)
         {
-            _bulletsType = bulletPrefab;
+            _bulletType = bulletPrefab;
             Reload();
         }
 
         public void Reload()
         {
-            if (_bulletsType == null)
+            if (_bulletType == null)
             {
-                Debug.LogWarning("You need change bullets type!");
+                Debug.LogWarning("You need change bullet type!");
                 return;
             }
             
             if (isReloading)
                 return;
 
-            _lastReloadingTimeCode = Time.time;
-            
+            UpdateReloadingTime();
             OnReloading?.Invoke();
-            _ammoClip = ClipSize;
+            FillAmmoClip();
         }
 
         public void Fire()
         {
-            if (_ammoClip == 0)
+            if (_currentAmmoClip == 0)
             {
                 Reload();
                 return;
@@ -54,18 +53,32 @@ namespace Code.Weapons.Base
             
             if (isReloading)
                 return;
-            
-            if (Time.time - _lastShotTime > DelayBetweenBullets)
-            {
-                Bullet bullet = Instantiate(_bulletsType, BulletReleasePoint.position, Quaternion.identity);
-                bullet.Shoot();
 
-                --_ammoClip;
-                
-                _lastShotTime = Time.time;
-                
-                OnFire?.Invoke();
-            }
+            if (Time.time - _lastShotTime < DelayBetweenBullets)
+                return;
+            
+            CreateBullet();
+            DecreaseCurrentAmmoClip();
+            UpdateLastShotTime();
+            OnFire?.Invoke();
         }
+
+        private void UpdateReloadingTime() => 
+            _lastReloadingTimeCode = Time.time;
+
+        private void FillAmmoClip() => 
+            _currentAmmoClip = ClipSize;
+
+        private void CreateBullet()
+        {
+            Bullet bullet = Instantiate(_bulletType, BulletReleasePoint.position, Quaternion.identity);
+            bullet.Shoot();
+        }
+
+        private void DecreaseCurrentAmmoClip() => 
+            --_currentAmmoClip;
+
+        private void UpdateLastShotTime() => 
+            _lastShotTime = Time.time;
     }
 }

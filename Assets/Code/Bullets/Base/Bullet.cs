@@ -16,20 +16,20 @@ namespace Code.Bullets.Base
         protected virtual void Awake() => 
             rigidbody = GetComponent<Rigidbody>();
 
-        private void Start() => 
+        protected virtual void Start() => 
             DestroyAfterTime();
 
         protected virtual void OnCollisionEnter(Collision collision)
         {
-            TryTakeDamage(collision);
+            TakeDamage(collision);
             Detonate(collision.contacts[0].point);
             Destroy(gameObject);
         }
 
-        public virtual void Shoot() => 
+        public void Shoot() => 
             rigidbody.velocity = speed * transform.forward;
 
-        public virtual void Detonate(Vector3 point)
+        public void Detonate(Vector3 point)
         {
             if (detonationParticlePrefab != null)
             {
@@ -38,7 +38,7 @@ namespace Code.Bullets.Base
             }
         }
 
-        protected virtual void TryTakeDamage(Collision collision)
+        protected virtual void TakeDamage(Collision collision)
         {
             if (collision.gameObject.TryGetComponent(out IDamageable damageable))
                 damageable.TakeDamage();

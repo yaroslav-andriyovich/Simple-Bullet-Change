@@ -8,7 +8,7 @@ namespace Code.Bullets
     {
         [SerializeField, Min(0f)] private float _explosionRadius = 5f;
         
-        protected override void TryTakeDamage(Collision collision)
+        protected override void TakeDamage(Collision collision)
         {
             Vector3 contactPoint = collision.contacts[0].point;
             Collider[] colliders = Physics.OverlapSphere(contactPoint, _explosionRadius);

@@ -14,8 +14,8 @@ namespace Code.Bullets
         private Collider[] _collidersInSphere;
         private List<IDamageable> _nearestTargets;
         private IDamageable _currentTarget;
-        private int _bounces;
-        private Collider _lastHittedCollider;
+        private int _currentBounces;
+        private Collider _lastColliderThatGotHit;
 
         protected override void Awake()
         {
@@ -25,14 +25,14 @@ namespace Code.Bullets
         }
 
         protected override void OnCollisionEnter(Collision collision) => 
-            TryTakeDamage(collision);
+            TakeDamage(collision);
 
-        protected override void TryTakeDamage(Collision collision)
+        protected override void TakeDamage(Collision collision)
         {
-            if (_lastHittedCollider == collision.collider)
+            if (_lastColliderThatGotHit == collision.collider)
                 return;
             
-            if (_bounces >= _maxBounces || !IsDamageable(collision, out _currentTarget))
+            if (_currentBounces >= _maxBounces || !IsDamageable(collision, out _currentTarget))
             {
                 Cleanup();
                 return;
@@ -61,14 +61,14 @@ namespace Code.Bullets
 
         private void SetPassabilityThroughCurrentTarget(Collider targetCollider)
         {
-            if (_lastHittedCollider != null)
+            if (_lastColliderThatGotHit != null)
             {
-                Physics.IgnoreCollision(collider, _lastHittedCollider, false);
-                _lastHittedCollider = null;
+                Physics.IgnoreCollision(collider, _lastColliderThatGotHit, false);
+                _lastColliderThatGotHit = null;
             }
 
-            _lastHittedCollider = targetCollider;
-            Physics.IgnoreCollision(collider, _lastHittedCollider, true);
+            _lastColliderThatGotHit = targetCollider;
+            Physics.IgnoreCollision(collider, _lastColliderThatGotHit, true);
         }
 
         private bool IsDamageable(Collision collision, out IDamageable currentDamageable) => 
@@ -105,27 +105,27 @@ namespace Code.Bullets
 
         private void SetNewTarget()
         {
-            IDamageable damageable = GetRandomNearestDamageable();
-            Vector3 nextDamageablePosition = damageable.CenterPosition;
-            Vector3 direction = (nextDamageablePosition - transform.position).normalized;
+            IDamageable target = GetRandomNearestTarget();
+            Vector3 nextTargetPosition = target.CenterPosition;
+            Vector3 direction = (nextTargetPosition - transform.position).normalized;
 
             rigidbody.velocity = direction * speed;
             rigidbody.angularVelocity = Vector3.zero;
             transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        private IDamageable GetRandomNearestDamageable() => 
+        private IDamageable GetRandomNearestTarget() => 
             _nearestTargets[Random.Range(0, _nearestTargets.Count)];
 
         private bool BounceLimitHasBeenReached() => 
-            ++_bounces >= _maxBounces;
+            ++_currentBounces >= _maxBounces;
 
         private void Cleanup()
         {
             _collidersInSphere = null;
             _nearestTargets.Clear();
             _currentTarget = null;
-            _lastHittedCollider = null;
+            _lastColliderThatGotHit = null;
             Destroy(gameObject);
         }
 
