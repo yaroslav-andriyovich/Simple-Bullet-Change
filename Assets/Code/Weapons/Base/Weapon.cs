@@ -9,13 +9,17 @@ namespace Code.Weapons.Base
         [field: SerializeField, Min(0f)] public float DelayBetweenBullets { get; private set; }
         [field: SerializeField] public Transform BulletReleasePoint { get; private set; }
         [field: SerializeField, Min(0f)] public uint ClipSize { get; private set; }
+        [field: SerializeField, Min(0f)] public float ReloadingDuration { get; private set; }
 
         public event Action OnFire;
         public event Action OnReloading;
 
+        private bool isReloading => Time.time - _lastReloadingTimeCode < ReloadingDuration;
+
         private Bullet _bulletsType;
         private uint _ammoClip;
         private float _lastShotTime;
+        private float _lastReloadingTimeCode;
 
         public void ChangeBulletType<T>(T bulletPrefab) where T : Bullet
         {
@@ -25,6 +29,17 @@ namespace Code.Weapons.Base
 
         public void Reload()
         {
+            if (_bulletsType == null)
+            {
+                Debug.LogWarning("You need change bullets type!");
+                return;
+            }
+            
+            if (isReloading)
+                return;
+
+            _lastReloadingTimeCode = Time.time;
+            
             OnReloading?.Invoke();
             _ammoClip = ClipSize;
         }
@@ -36,6 +51,9 @@ namespace Code.Weapons.Base
                 Reload();
                 return;
             }
+            
+            if (isReloading)
+                return;
             
             if (Time.time - _lastShotTime > DelayBetweenBullets)
             {

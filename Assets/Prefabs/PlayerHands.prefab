@@ -2173,6 +2173,7 @@ GameObject:
   - component: {fileID: 115569475513574155}
   - component: {fileID: 8416319881438995062}
   - component: {fileID: 7402531974175122242}
+  - component: {fileID: 6773608954909590825}
   - component: {fileID: 1965355123427654664}
   - component: {fileID: 5138912096052306272}
   m_Layer: 0
@@ -2214,6 +2215,7 @@ MonoBehaviour:
   <DelayBetweenBullets>k__BackingField: 1
   <BulletReleasePoint>k__BackingField: {fileID: 4444589723375290189}
   <ClipSize>k__BackingField: 20
+  <ReloadingDuration>k__BackingField: 2.5
 --- !u!114 &7402531974175122242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2232,6 +2234,19 @@ MonoBehaviour:
   _reloadingClip: {fileID: 8300000, guid: 14daf4a3664f2c341aac8b2eb0384642, type: 3}
   _audio: {fileID: 5138912096052306272}
   _muzzleFlash: {fileID: 9044806779335706668}
+--- !u!114 &6773608954909590825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4156697304429257035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2b1e3271cc445fcb19a8f16fafdf841, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weapon: {fileID: 8416319881438995062}
 --- !u!137 &1965355123427654664
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0

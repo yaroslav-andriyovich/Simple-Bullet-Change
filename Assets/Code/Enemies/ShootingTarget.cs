@@ -54,12 +54,6 @@ namespace Code.Enemies
         private void AnimateToNormalColor() => 
             _material.DOColor(_defaultColor, _animationTime);
 
-        private void PlaySound()
-        {
-            _audio.pitch = Random.Range(_pitchMin, _pitchMax);
-            _audio.Play();
-        }
-        
         private void PlayTiltAnimation()
         {
             if (_sequence != null)
@@ -82,52 +76,11 @@ namespace Code.Enemies
 
             _sequence.Play();
         }
-    }
-    
-    /*[RequireComponent(typeof(AudioSource))]
-    public class ShootingTarget : Enemy
-    {
-        [SerializeField] private float _animationAngle = -45f;
-        [SerializeField] private float _animationTime = 0.25f;
-        [SerializeField] private Ease _animationEase;
 
-        public override Vector3 CenterPosition => new Vector3(transform.position.x, transform.position.y + 2.5f, transform.position.z);
-
-        private AudioSource _audio;
-
-        private Sequence _sequence;
-
-        private void Awake() => 
-            _audio = GetComponent<AudioSource>();
-
-        public override void TakeDamage()
+        private void PlaySound()
         {
-            base.TakeDamage();
+            _audio.pitch = Random.Range(_pitchMin, _pitchMax);
             _audio.Play();
-            PlayHitAnimation();
         }
-
-        private void PlayHitAnimation()
-        {
-            if (_sequence != null)
-                _sequence.Rewind();
-            
-            float partTime = _animationTime / 2;
-            Quaternion initialRotation = transform.rotation;
-            
-            _sequence = DOTween.Sequence();
-
-            _sequence.Append(transform.DORotateQuaternion(
-                    initialRotation * Quaternion.Euler(_animationAngle, 0f, 0f),
-                    partTime)
-                .SetEase(_animationEase));
-
-            _sequence.Append(transform.DORotateQuaternion(
-                    initialRotation,
-                    partTime)
-                .SetEase(_animationEase));
-
-            _sequence.Play();
-        }
-    }*/
+    }
 }

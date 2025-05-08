@@ -13,11 +13,8 @@ namespace Code.Bullets.Base
 
         protected new Rigidbody rigidbody;
         
-        protected virtual void Awake()
-        {
+        protected virtual void Awake() => 
             rigidbody = GetComponent<Rigidbody>();
-            Shoot();
-        }
 
         private void Start() => 
             DestroyAfterTime();
@@ -29,10 +26,8 @@ namespace Code.Bullets.Base
             Destroy(gameObject);
         }
 
-        public virtual void Shoot()
-        {
+        public virtual void Shoot() => 
             rigidbody.velocity = speed * transform.forward;
-        }
 
         public virtual void Detonate(Vector3 point)
         {

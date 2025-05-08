@@ -95,7 +95,7 @@ MonoBehaviour:
   detonationParticlePrefab: {fileID: 3480293873179472742, guid: 1ab70fb7e6af61441b4d14fc1b9f9f05,
     type: 3}
   collider: {fileID: 6784357485025595696}
-  _explosionRadius: 5
+  _explosionRadius: 10
 --- !u!136 &6784357485025595696 stripped
 CapsuleCollider:
   m_CorrespondingSourceObject: {fileID: 8073661313655796699, guid: 150b66a9fede2c24aba33a120514b098,
