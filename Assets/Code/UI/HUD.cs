@@ -1,5 +1,6 @@
 using System.Text;
 using Code.Weapons.Base;
+using TMPro;
 using UnityEngine;
 
 namespace Code.UI
@@ -7,6 +8,7 @@ namespace Code.UI
     public class HUD : MonoBehaviour
     {
         [SerializeField] private UIStatusBar _weaponClipSizeBar;
+        [SerializeField] private TMP_Text _changeBulletTypeWarning;
         [SerializeField] private Weapon _weapon;
 
         private StringBuilder _stringBuilder;
@@ -15,6 +17,7 @@ namespace Code.UI
         {
             _stringBuilder = new StringBuilder("0/0");
             _weapon.OnFire += UpdateAmmoClipSize;
+            _weapon.OnReloading += HideChangeBulletTypeWarning;
             _weapon.OnReloaded += UpdateAmmoClipSize;
         }
 
@@ -24,6 +27,7 @@ namespace Code.UI
         private void OnDestroy()
         {
             _weapon.OnFire -= UpdateAmmoClipSize;
+            _weapon.OnReloading -= HideChangeBulletTypeWarning;
             _weapon.OnReloaded -= UpdateAmmoClipSize;
         }
 
@@ -37,6 +41,12 @@ namespace Code.UI
             
             _weaponClipSizeBar.UpdateTextInfo(_stringBuilder.ToString());
             _weaponClipSizeBar.ReportProgress((float)_weapon.CurrentAmmoClip / (float)_weapon.ClipSize);
+        }
+
+        private void HideChangeBulletTypeWarning()
+        {
+            _weapon.OnReloading -= HideChangeBulletTypeWarning;
+            _changeBulletTypeWarning.gameObject.SetActive(false);
         }
     }
 }
