@@ -13,6 +13,9 @@ namespace Code.Weapons.Base
 
         public event Action OnFire;
         public event Action OnReloading;
+        public event Action OnReloaded;
+
+        public uint CurrentAmmoClip => _currentAmmoClip;
 
         private bool isReloading => Time.time - _lastReloadingTimeCode < ReloadingDuration;
 
@@ -41,6 +44,7 @@ namespace Code.Weapons.Base
             UpdateReloadingTime();
             OnReloading?.Invoke();
             FillAmmoClip();
+            OnReloaded?.Invoke();
         }
 
         public void Fire()

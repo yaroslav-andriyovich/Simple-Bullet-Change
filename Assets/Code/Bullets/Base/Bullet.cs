@@ -1,3 +1,4 @@
+using Code.Bullets.Configs;
 using Code.Damageable;
 using UnityEngine;
 
@@ -6,9 +7,7 @@ namespace Code.Bullets.Base
     [RequireComponent(typeof(Rigidbody))]
     public abstract class Bullet : MonoBehaviour
     {
-        [SerializeField, Min(0f)] protected float speed = 5f;
-        [SerializeField, Min(0f)] protected float lifetime = 5f;
-        [SerializeField] protected ParticleSystem detonationParticlePrefab;
+        [SerializeField] protected BulletConfigBase configBase;
         [SerializeField] protected new Collider collider;
 
         protected new Rigidbody rigidbody;
@@ -27,13 +26,13 @@ namespace Code.Bullets.Base
         }
 
         public void Shoot() => 
-            rigidbody.velocity = speed * transform.forward;
+            rigidbody.velocity = configBase.Speed * transform.forward;
 
         public void Detonate(Vector3 point)
         {
-            if (detonationParticlePrefab != null)
+            if (configBase.DetonationParticlePrefab != null)
             {
-                ParticleSystem explosionParticle = Instantiate(detonationParticlePrefab, point, Quaternion.identity);
+                ParticleSystem explosionParticle = Instantiate(configBase.DetonationParticlePrefab, point, Quaternion.identity);
                 explosionParticle.Play();
             }
         }
@@ -45,6 +44,6 @@ namespace Code.Bullets.Base
         }
 
         private void DestroyAfterTime() => 
-            Destroy(gameObject, lifetime);
+            Destroy(gameObject, configBase.LifeTime);
     }
 }

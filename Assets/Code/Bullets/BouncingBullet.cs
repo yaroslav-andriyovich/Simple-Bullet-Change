@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Code.Bullets.Base;
+using Code.Bullets.Configs;
 using Code.Damageable;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,8 +9,7 @@ namespace Code.Bullets
 {
     public class BouncingBullet : Bullet
     {
-        [SerializeField, Min(0)] private int _maxBounces = 3;
-        [SerializeField, Min(0f)] private float _bouncingRadius = 5f;
+        private BouncingBulletConfig Config => configBase as BouncingBulletConfig;
 
         private Collider[] _collidersInSphere;
         private List<IDamageable> _nearestTargets;
@@ -20,8 +20,8 @@ namespace Code.Bullets
         protected override void Awake()
         {
             base.Awake();
-            _collidersInSphere = new Collider[_maxBounces];
-            _nearestTargets = new List<IDamageable>(_maxBounces);
+            _collidersInSphere = new Collider[Config.MaxBounces];
+            _nearestTargets = new List<IDamageable>(Config.MaxBounces);
         }
 
         protected override void OnCollisionEnter(Collision collision) => 
@@ -32,7 +32,7 @@ namespace Code.Bullets
             if (_lastColliderThatGotHit == collision.collider)
                 return;
             
-            if (_currentBounces >= _maxBounces || !IsDamageable(collision, out _currentTarget))
+            if (_currentBounces >= Config.MaxBounces || !IsDamageable(collision, out _currentTarget))
             {
                 Cleanup();
                 return;
@@ -101,7 +101,7 @@ namespace Code.Bullets
         }
 
         private void CacheNearestColliders(Vector3 contactPoint) => 
-            Physics.OverlapSphereNonAlloc(contactPoint, _bouncingRadius, _collidersInSphere);
+            Physics.OverlapSphereNonAlloc(contactPoint, Config.BouncingRadius, _collidersInSphere);
 
         private void SetNewTarget()
         {
@@ -109,7 +109,7 @@ namespace Code.Bullets
             Vector3 nextTargetPosition = target.CenterPosition;
             Vector3 direction = (nextTargetPosition - transform.position).normalized;
 
-            rigidbody.velocity = direction * speed;
+            rigidbody.velocity = direction * Config.Speed;
             rigidbody.angularVelocity = Vector3.zero;
             transform.rotation = Quaternion.LookRotation(direction);
         }
@@ -118,7 +118,7 @@ namespace Code.Bullets
             _nearestTargets[Random.Range(0, _nearestTargets.Count)];
 
         private bool BounceLimitHasBeenReached() => 
-            ++_currentBounces >= _maxBounces;
+            ++_currentBounces >= Config.MaxBounces;
 
         private void Cleanup()
         {
@@ -132,7 +132,7 @@ namespace Code.Bullets
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, _bouncingRadius);
+            Gizmos.DrawWireSphere(transform.position, Config.BouncingRadius);
         }
     }
 }

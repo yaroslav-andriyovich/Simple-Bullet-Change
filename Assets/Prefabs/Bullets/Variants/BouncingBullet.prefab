@@ -96,10 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b507456326e3498bb25a07ccd4c41761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 40
-  lifetime: 5
+  configBase: {fileID: 11400000, guid: cb2ac7bfc2c673e49b8525abaed13ea8, type: 2}
   detonationParticlePrefab: {fileID: 2140758800889950845, guid: e5923bc5eec78f848b41766a1d425f8b,
     type: 3}
   collider: {fileID: 2698414574046541924}
-  _maxBounces: 3
-  _bouncingRadius: 8
